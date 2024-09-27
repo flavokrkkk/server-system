@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -21,7 +24,6 @@ public class Board {
     @JoinColumn(name = "project_id")
     private Project project;
 
-//    // Связь с карточками
-//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-//    private List<Card> cards = new ArrayList<>();
+   @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Card> cards = new ArrayList<>();
 }
