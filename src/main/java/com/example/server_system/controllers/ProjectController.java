@@ -9,49 +9,51 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/project")
 public class ProjectController {
 
     private final ProjectService projectService;
+
     @Autowired
-    public ProjectController(ProjectService projectService){this.projectService = projectService;}
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @PostMapping
-    public ResponseEntity<?> createProject(@RequestBody ProjectDto dto){
+    public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectDto dto) {
         try {
             ProjectDto projectDto = projectService.createProject(dto);
             return new ResponseEntity<>(projectDto, HttpStatus.CREATED);
-        } catch (Exception error) {
-            return ResponseEntity.badRequest().body("Не удалось добавить проект!");
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllProject(){
+    public ResponseEntity<List<ProjectDto>> getAllProjects() {
         try {
-            List<ProjectDto> projectDtoList = projectService.getAllProject();
+            List<ProjectDto> projectDtoList = projectService.getAllProjects();
             return new ResponseEntity<>(projectDtoList, HttpStatus.OK);
-        } catch (Exception error){
-            return ResponseEntity.badRequest().body("Не удалось получить все проекты!");
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProjectById(@PathVariable Long id){
-        try {
-            return new ResponseEntity<>(projectService.getProjectById(id), HttpStatus.OK);
-        } catch (Exception error) {
-            return ResponseEntity.badRequest().body("Не удалось удалить проект!");
-        }
+    public ResponseEntity<ProjectDto> getProjectById(@PathVariable Long id) {
+        return projectService.getProjectById(id)
+                .map(project -> new ResponseEntity<>(project, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProject(@PathVariable Long id){
-        try {
-            return new ResponseEntity<>(projectService.deleteProject(id), HttpStatus.OK);
-        } catch (Exception error) {
-            return ResponseEntity.badRequest().body("Не удалось удалить проект!");
+    public ResponseEntity<?> deleteProject(@PathVariable Long id) {
+        if (projectService.deleteProject(id).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>("Проект не найден", HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -4,27 +4,27 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Project {
+public class Message {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String description;
-    private int priority;
+    private String content;
+
+    private LocalDateTime timestamp;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User sender;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Board> boards = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "chat_id")
+    private Chat chat;
 }

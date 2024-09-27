@@ -15,54 +15,36 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper){
+    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
     }
 
-    public ProjectDto createProject(ProjectDto dto){
+    public ProjectDto createProject(ProjectDto dto) {
         Project project = projectMapper.toEntity(dto);
         Project savedProject = projectRepository.save(project);
         return projectMapper.toDto(savedProject);
     }
 
-    public List<ProjectDto> getAllProject(){
-        return projectRepository.findAll().stream().map(projectMapper::toDto).toList();
+    public List<ProjectDto> getAllProjects() {
+        return projectRepository.findAll().stream()
+                .map(projectMapper::toDto)
+                .toList();
     }
 
-    public Optional<ProjectDto> deleteProject(Long id){
-        if(projectRepository.existsById(id)){
-            Optional<Project> optionalProject = projectRepository.findById(id);
+    public Optional<ProjectDto> getProjectById(Long id) {
+        return projectRepository.findById(id)
+                .map(projectMapper::toDto);
+    }
 
-            Project project = optionalProject.orElseThrow(() -> new RuntimeException("Project not found"));
-
+    public Optional<ProjectDto> deleteProject(Long id) {
+        Optional<Project> projectOpt = projectRepository.findById(id);
+        if (projectOpt.isPresent()) {
             projectRepository.deleteById(id);
-
-            ProjectDto projectDto = projectMapper.toDto(project);
-
-            if (projectDto == null) {
-                throw new RuntimeException("Failed to map Project to ProjectDto");
-            }
-
-            return Optional.of(projectDto);
-        } else {
-            return Optional.empty();
+            return projectOpt.map(projectMapper::toDto);
         }
-    }
-
-
-    public Optional<ProjectDto> getProjectById(Long id){
-        if(projectRepository.existsById(id)){
-            Optional<Project> projects = projectRepository.findById(id);
-            Project project = projects.orElseThrow(() -> new RuntimeException("Project not found"));
-            ProjectDto projectDto = projectMapper.toDto(project);
-            if (projectDto == null) {
-                throw new RuntimeException("Failed to map Project to ProjectDto");
-            }
-            return Optional.of(projectDto);
-        }else {
-            return Optional.empty();
-        }
+        return Optional.empty();
     }
 }
