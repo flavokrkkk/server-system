@@ -18,13 +18,15 @@ public class Card {
     private Long id;
 
     private String name;
-    private int order; // Поле для сортировки карточек на доске
+//    private int order; // Поле для сортировки карточек на доске
 
-    @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
+//    // Связь с задачами
+//    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+//    private List<Task> tasks = new ArrayList<>();
+//
+//    @ManyToOne
+//    @JoinColumn(name = "board_id")
+//    private Board board;
 
-    // Связь с задачами
-    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
-    private List<Task> tasks = new ArrayList<>();
+
 }

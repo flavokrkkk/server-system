@@ -22,9 +22,9 @@ public class Task {
     private String status; // Статус задачи (например, OPEN, IN_PROGRESS, DONE)
     private int priority;
 
-    @ManyToOne
-    @JoinColumn(name = "card_id")
-    private Card card;
+//    @ManyToOne
+//    @JoinColumn(name = "card_id")
+//    private Card card;
 
     // Связь с комментариями
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)

@@ -24,7 +24,7 @@ public class Board {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    // Связь с карточками
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Card> cards = new ArrayList<>();
+//    // Связь с карточками
+//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+//    private List<Card> cards = new ArrayList<>();
 }
