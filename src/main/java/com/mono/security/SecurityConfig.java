@@ -45,13 +45,19 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() //временно
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint(authorizationEndpoint ->
+                                authorizationEndpoint.baseUri("/oauth2/authorize"))
+                        .redirectionEndpoint(redirectionEndpoint ->
+                                redirectionEndpoint.baseUri("/login/oauth2/code/*"))
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        // http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

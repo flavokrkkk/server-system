@@ -3,10 +3,10 @@ package com.mono.dto;
 import lombok.Data;
 
 @Data
-public class TaskDto {
+public class CardDto {
     private Long id;
     private String name;
-    private String description;
+    private String background;
 
-    private Long card_id;
+    private Long board_id;
 }

@@ -22,4 +22,8 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private User user;
 }
