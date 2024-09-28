@@ -2,7 +2,9 @@ package com.mono.service;
 
 import com.mono.dto.ProjectDto;
 import com.mono.mapper.ProjectMapper;
+import com.mono.models.Notification;
 import com.mono.models.Project;
+import com.mono.models.User;
 import com.mono.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,18 +17,49 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+    private final EmailService emailService;
+    private final UserService userService;
+    private final NotificationService notificationService;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
+    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper, EmailService emailService, UserService userService, NotificationService notificationService) {
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
+        this.emailService = emailService;
+        this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     public ProjectDto createProject(ProjectDto dto) {
         Project project = projectMapper.toEntity(dto);
+
+
         Project savedProject = projectRepository.save(project);
+
+
+        User currentUser = userService.getCurrentUser();
+
+
+        String subject = "Создание проекта";
+        String message = "Проект \"" + savedProject.getName() + "\" был успешно создан. " +
+                "Описание: \"" + savedProject.getDescription() + "\". " +
+                "ID проекта: " + savedProject.getId();
+
+
+        emailService.sendEmail(currentUser.getEmail(), subject, message);
+
+
+        Notification notification = new Notification();
+        notification.setUser(currentUser);
+        notification.setSubject(subject);
+        notification.setMessage(message);
+        notification.setRead(false);
+        notificationService.saveNotification(notification);
+
         return projectMapper.toDto(savedProject);
     }
+
+
 
     public List<ProjectDto> getAllProjects() {
         return projectRepository.findAll().stream()

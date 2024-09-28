@@ -1,7 +1,10 @@
 package com.mono.controllers;
 
 import com.mono.dto.TaskDto;
+import com.mono.models.User;
+import com.mono.service.EmailService;
 import com.mono.service.TaskService;
+import com.mono.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +18,7 @@ public class TaskController {
     private final TaskService taskService;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, EmailService emailService, UserService userService) {
         this.taskService = taskService;
     }
 

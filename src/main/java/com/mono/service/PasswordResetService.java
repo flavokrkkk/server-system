@@ -31,9 +31,9 @@ public class PasswordResetService {
             user.setResetTokenExpiry(System.currentTimeMillis() + 3600000);
             userRepository.save(user);
 
-            String resetLink = "http://your-app-url/reset-password?token=" + token;
-            String message = "To reset your password, click the link below:\n" + resetLink;
-            emailService.sendEmail(email, "Password Reset", message);
+            String resetLink = "http://url-front/reset-password?token=" + token;
+            String message = "Чтобы сбросить свой пароль, перейдите по ссылке ниже:\n" + resetLink;
+            emailService.sendEmail(email, "Сброс пароля", message);
         }
     }
 
@@ -47,10 +47,10 @@ public class PasswordResetService {
                 user.setResetTokenExpiry(null);
                 userRepository.save(user);
             } else {
-                throw new RuntimeException("Reset token has expired");
+                throw new RuntimeException("Срок действия токена сброса истек");
             }
         } else {
-            throw new RuntimeException("Invalid reset token");
+            throw new RuntimeException("Недопустимый токен сброса");
         }
     }
 }
